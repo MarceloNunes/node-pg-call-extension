@@ -35,6 +35,39 @@ client.call('userLogin', {
     remoteAddress:   req.headers['x-forwarded-for'] || req.connection.remoteAddress,
     remoteClientKey: req.cookies.remoteClientKey,
     userAgent:       req.headers['user-agent']
-}, function (query) {
-
+}, function (result) {
+    // do something
+});
 ```
+Clearer, isn't it?
+
+### Dynamic binding
+
+One of the drawbacks of stored procedures languages (PL/SQL, Transact, etc.) is that they only accept
+static binding, which means that all parameters must be passed on every function call. In this call 
+extension, is offered an workaround for this limitation. 
+
+For the same `user_login` function, consider that you already has the value for the `_remote_client_key`, 
+thus you don't need to inform the `_user_agent` value because it is only used to register new clients. 
+In this case we can perform the call this way.
+
+``` javascript 
+var params = {
+    email:           req.body.email,
+    password:        req.body.password,
+    remoteAddress:   req.headers['x-forwarded-for'] || req.connection.remoteAddress
+};
+
+if (req.cookies.remoteClientKey)
+    params.remoteClientKey = req.cookies.remoteClientKey;
+else
+    params.userAgent = req.headers['user-agent'];
+
+client.call('userLogin', params, function (result) {
+    // do something
+});
+```
+Notice that, depending wether the `remoteClientKey` value is available or not, the method will receive 
+a different set of parameters. This call extension will look up at the `pg_catalog.pg_proc` for the 
+parameters sequnce and will match these parameters with the given values. Any ininformed parameter 
+will defalt to null.
