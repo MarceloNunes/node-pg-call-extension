@@ -29,14 +29,17 @@ client.query('user_login ($1::text, $2::text, $3::text, $4::text, $5::text)',
 In this module we turn this into something more compreehensive...
 
 ``` javascript 
-client.call('userLogin', {
-    email:           req.body.email,
-    password:        req.body.password,
-    remoteAddress:   req.headers['x-forwarded-for'] || req.connection.remoteAddress,
-    remoteClientKey: req.cookies.remoteClientKey,
-    userAgent:       req.headers['user-agent']
-}, function (result) {
-    console.log(result.value);
+var db = require('db');
+db.start(function (err, client, done) {
+    client.call('userLogin', {
+        email:           req.body.email,
+        password:        req.body.password,
+        remoteAddress:   req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+        remoteClientKey: req.cookies.remoteClientKey,
+        userAgent:       req.headers['user-agent']
+    }, function (result) {
+        console.log(result.value);
+    });
 });
 ```
 Notice that both the function names and parameters can be notated in **camlCase** style to meet 
