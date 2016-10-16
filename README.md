@@ -142,10 +142,10 @@ db.start(function (err, client, done) {
         else
             client.call('accessLogBrowse', {
                 userId : query.record.id,
-		limit: 10
-	    }, function (query) {
-	       for (var i in query.results)
-	           console.log(query.results[i].startTimeFormat);
+                limit: 10
+            }, function (query) {
+               for (var i in query.results)
+                   console.log(query.results[i].startTimeFormat);
             });
     });
 });
