@@ -132,6 +132,12 @@ create function access_log_browse (_page int, _limit int, _user_id bigint,
 	declare
 		_offset bigint;
 	begin
+		if _page is null then
+			_page := 1;
+		endif;
+		if _limit is null then
+			_limit := 100;
+		endif;
 		_offset := (_page - 1) * _limit;
 
 		return query select * from access_log_view
