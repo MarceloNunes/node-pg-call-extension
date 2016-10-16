@@ -90,6 +90,30 @@ create view access_log_view as
 		inner join user_category
 			on users.user_category_id = user_category.id;
 
+create view users_view as
+	select
+		users.id,
+		lpad(to_char(users.id, 'FM999999'::text), 4, '0'::text) as record_id,
+		users.name,
+		users.email,
+		users.company_id,
+		users.registration_date,
+		to_char(users.registration_date, 'DD/MM/YYYY hh24:MI:SS'::text) AS start_time_format,
+		to_char(users.registration_date, 'DD/MM/YYYY'::text) AS start_date_format,
+		company.name as company,
+		company.shortname as company_short,
+		company.admin as company_admin,
+		users.active,
+		case when users.active then 'ACTIVE' else 'INACTIVE' end as status,
+		users.user_category_id,
+		user_category.identifier as user_category
+	from 
+		users
+		inner join company
+			on users.company_id = company.id
+		inner join user_category
+			on users.user_category_id = user_category.id;
+			
 create function access_log_get(_id bigint) returns setof access_log_view as $$
 	begin
 		return query select * from access_log_view where id = _id;
