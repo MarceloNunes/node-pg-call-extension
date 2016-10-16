@@ -36,9 +36,13 @@ client.call('userLogin', {
     remoteClientKey: req.cookies.remoteClientKey,
     userAgent:       req.headers['user-agent']
 }, function (result) {
-    // do something
+    console.log(result.value);
 });
 ```
+Notice that both the function names and parameters can be notated in **camlCase** style to meet 
+Javascript standards. Also, as the function returns a single value, the parameter passed to the 
+callback function will have a `value` property with that resulting number.
+
 Clearer, isn't it?
 
 ### Dynamic binding
@@ -64,10 +68,61 @@ else
     params.userAgent = req.headers['user-agent'];
 
 client.call('userLogin', params, function (result) {
-    // do something
+     console.log(result.value);
 });
 ```
 Notice that, depending wether the `remoteClientKey` value is available or not, the method will receive 
 a different set of parameters. This call extension will look up at the `pg_catalog.pg_proc` for the 
 parameters sequnce and will match these parameters with the given values. Any ininformed parameter 
 will defalt to null.
+
+## Inline parameters
+
+Even with the advantage of dynamic binding, sometimes is much clearer to receive parameters directly as a 
+list. COnsider for instance the following function signature
+
+``` sql
+create function access_log_get(_id bigint) returns setof access_log_view
+```
+For this function the parameters object would have to be something like `{id: '1234'}`, however this 
+situation, it might be clearer just to inform the value implictly. Lets go back to our example:
+
+``` javascript 
+client.call('userLogin', {
+    email:           req.body.email,
+    password:        req.body.password,
+    remoteAddress:   req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+    remoteClientKey: req.cookies.remoteClientKey,
+    userAgent:       req.headers['user-agent']
+}, function (result) {
+    client.call('accessLogGet', result.value, function (query) {
+        console.log(query.record);
+    });
+});
+```
+As the function returns a single record, the parameter passed to the 
+callback function will have a `record` property with that resulting record.
+
+This operation will print something like this:
+
+``` json
+{ id: '911',
+  recordId: '00000911',
+  remoteAddress: '128.0.0.0',
+  accessTime: Sun Oct 16 2016 14:48:18 GMT-0200 (BRST),
+  startTimeFormat: '16/10/2016 14:48:18',
+  userId: '5',
+  remoteClientId: '910',
+  accessKey: 'B2CA4A221281A6760C6A161FCE981D53',
+  open: true,
+  accessStatus: 'OPEN',
+  userName: 'Marcelo Pereira Nunes',
+  userEmail: 'marcelo@qualifyit.com.br',
+  companyId: '4',
+  company: 'DBL Consultoria Ltda.',
+  companyShort: 'QualifyIT',
+  companyAdmin: true,
+  userCategoryId: '1',
+  userCategory: 'ADMIN',
+  remoteClientKey: 'B2105295AA9A79B5AD2CFC6FB5D9501D' }
+```
