@@ -141,3 +141,8 @@ create function access_log_browse (_page int, _limit int, _user_id bigint,
 	end;
 $$ language plpgsql;
 
+create function users_get(_email varchar) returns setof users_view as $$
+	begin
+		return query select * from users_view where email = _email;
+	end;
+$$ language plpgsql;
