@@ -21,14 +21,14 @@ stored procedures!!
 Anyways, to invoke this function on Node.js using the `pg` extension we wold have to use 
 something like that.
 
-``` javascript
+``` node
 client.query('user_login ($1::text, $2::text, $3::text, $4::text, $5::text)', 
     [req.body.email, req.body.password, req.headers['x-forwarded-for'] || req.connection.remoteAddress,
 		    req.cookies.remoteClientKey, req.headers['user-agent']], callbackFunction);
 ```
 In this module we turn this into something more compreehensive...
 
-``` javascript 
+``` node 
 var db = require('db');
 db.start(function (err, client, done) {
     client.call('userLogin', {
@@ -58,7 +58,7 @@ For the same `user_login` function, consider that you already has the value for 
 thus you don't need to inform the `_user_agent` value because it is only used to register new clients. 
 In this case we can perform the call this way.
 
-``` javascript 
+``` node 
 var params = {
     email:           req.body.email,
     password:        req.body.password,
@@ -90,7 +90,7 @@ create function access_log_get(_id bigint) returns setof access_log_view
 For this function the parameters object would have to be something like `{id: '1234'}`, however this 
 situation, it might be clearer just to inform the value implictly. Lets go back to our example:
 
-``` javascript 
+``` node 
 client.call('userLogin', {
     email:           req.body.email,
     password:        req.body.password,
@@ -133,7 +133,7 @@ This operation will print something like this:
 
 Consider the following requirement: list the 10 last accesses times from n user given its email:
 
-``` javascript
+``` node
 var db = require('../db');
 db.start(function (err, client, done) {
     client.call('usersGet', 'marcelo@qualifyit.com.br', function (query) {
