@@ -129,3 +129,24 @@ This operation will print something like this:
   userCategory: 'ADMIN',
   remoteClientKey: 'B2105295AA9A79B5AD2CFC6FB5D9501D' }
 ```
+## Another example
+
+Consider the following requirement: list the 10 last accesses times from n user given its email:
+
+``` javascript
+var db = require('../db');
+db.start(function (err, client, done) {
+    client.call('usersGet', 'marcelo@qualifyit.com.br', function (query) {
+        if (query.error) 
+            console.log(query.error);
+        else
+            client.call('accessLogBrowse', {
+                userId : query.record.id,
+		limit: 10
+	    }, function (query) {
+	       for (var i in query.results)
+	           console.log(query.results[i].startTimeFormat);
+            });
+    });
+});
+```
