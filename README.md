@@ -109,25 +109,27 @@ callback function will have a `record` property with that resulting record.
 This operation will print something like this:
 
 ``` node
-{ 'id': '911',
-  'recordId': '00000911',
-  'remoteAddress': '128.0.0.0',
-  'accessTime': 'Sun Oct 16 2016 14:48:18 GMT-0200 (BRST)',
-  'startTimeFormat': '16/10/2016 14:48:18',
-  'userId': '5',
-  'remoteClientId': '910',
-  'accessKey': 'B2CA4A221281A6760C6A161FCE981D53',
-  'open': true,
-  'accessStatus': 'OPEN',
-  'userName': 'Marcelo Pereira Nunes',
-  'userEmail': 'marcelo@qualifyit.com.br',
-  'companyId': '4',
-  'company': 'DBL Consultoria Ltda.',
-  'companyShort': 'QualifyIT',
-  'companyAdmin': true,
-  'userCategoryId': '1',
-  'userCategory': 'ADMIN',
-  'remoteClientKey': 'B2105295AA9A79B5AD2CFC6FB5D9501D' }
+{ 
+  'id'              : '911',
+  'recordId'        : '00000911',
+  'remoteAddress'   : '128.0.0.0',
+  'accessTime'      : 'Sun Oct 16 2016 14:48:18 GMT-0200 (BRST)',
+  'startTimeFormat' : '16/10/2016 14:48:18',
+  'userId'          : '5',
+  'remoteClientId'  : '910',
+  'accessKey'       : 'B2CA4A221281A6760C6A161FCE981D53',
+  'open'            : true,
+  'accessStatus'    : 'OPEN',
+  'userName'        : 'Marcelo Pereira Nunes',
+  'userEmail'       : 'marcelo@qualifyit.com.br',
+  'companyId'       : '4',
+  'company'         : 'DBL Consultoria Ltda.',
+  'companyShort'    : 'QualifyIT',
+  'companyAdmin'    : true,
+  'userCategoryId'  : '1',
+  'userCategory'    : 'ADMIN',
+  'remoteClientKey' : 'B2105295AA9A79B5AD2CFC6FB5D9501D' 
+}
 ```
 ## Another example
 
