@@ -108,7 +108,7 @@ callback function will have a `record` property with that resulting record.
 
 This operation will print something like this:
 
-``` 
+``` node
 { id: '911',
   recordId: '00000911',
   remoteAddress: '128.0.0.0',
